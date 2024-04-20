@@ -10,6 +10,7 @@ import Scan from "@/components/Scan";
 import { BellIcon } from "lucide-react";
 import ProgressGraph from "@/components/ProgressGraph";
 import Calendar from "@/components/Calendar";
+import Challenges from "@/components/Challenges";
 
 export default function Home() {
   return (
@@ -34,17 +35,20 @@ export default function Home() {
       </Box>
 
       <Box sx={{ mt: 4 }}>
-        <Typography variant="h6" sx={{}}>
+        <Typography variant="h5" sx={{ textAlign: "center"}}>
           Weekly Workout Progress
         </Typography>
         <ProgressGraph />
       </Box>
 
       <Box sx={{ mt: 4 }}>
-        <Typography variant="h6" sx={{}}>
-          Calendar
+        <Typography variant="h5" sx={{ textAlign: "center"}}>
+          Challenges
         </Typography>
-        <Calendar />
+        <Challenges />
+      </Box>
+
+      <Box sx={{ mt: 4, mb: 4 }}>
       </Box>
     </Container>
   );
