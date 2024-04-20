@@ -20,17 +20,28 @@ import {
 } from "lucide-react";
 import Scan from "@/components/Scan";
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  weight: number;
+  height: number;
+  birth_date: string;
+}
+
 function WorkoutComponent() {
   const theme = useTheme();
   const maxRPM = 300;
   const [elapsedTime, setElapsedTime] = useState(0);
   const [matchTime, setMatchTime] = useState(0);
   const [calories, setCalories] = useState(0);
-  const [targetRPM, setTargetRPM] = useState(160);
+  const [targetRPM, setTargetRPM] = useState(150);
   const [currentRPM, setCurrentRPM] = useState(0);
   const active = useRef(false);
   const lastPingTime = useRef(1);
+  const jumpCount = useRef(0);
   const [rpmHistory, setRpmHistory] = useState([]);
+  const [user, setUser] = useState<User>({} as User);
 
   const isRpmsMatch = () =>
     currentRPM >= targetRPM - 25 && currentRPM <= targetRPM + 25;
@@ -86,6 +97,7 @@ function WorkoutComponent() {
       lastPingTime.current = currentTime; // Update last ping time
 
       if (active.current) {
+        jumpCount.current += 1;
         setRpmHistory((prevHistory) => {
           const newHistory = [...prevHistory, rpm].slice(-5); // Keep only the last 10 entries
           console.log(newHistory); // Debugging
@@ -95,6 +107,54 @@ function WorkoutComponent() {
           return newHistory;
         });
       }
+    }
+  };
+
+  const fetchUser = async () => {};
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/v1/users/1");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = (await response.json()) as User;
+        console.log(data);
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching challenges:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const finishWorkout = async () => {
+    const data = {
+      calories_burned: calories.toFixed(0),
+      rpm: jumpCount.current / (elapsedTime / 60),
+      duration: elapsedTime,
+      score: getMatchPercentage(),
+      challenge_id: 1,
+      user_id: 1,
+    };
+
+    // Send data to server
+    const response = await fetch("http://localhost:8080/v1/stats", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      console.log("Data sent successfully");
+    } else {
+      console.error("Failed to send data to server");
     }
   };
 
