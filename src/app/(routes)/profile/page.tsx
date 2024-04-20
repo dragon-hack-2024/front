@@ -1,3 +1,4 @@
+"use client";
 import Scan from "@/components/Scan";
 import {
   Avatar,
@@ -71,8 +72,6 @@ export default function Profile() {
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             Account
           </Typography>
-
-          <Scan />
         </CardContent>
       </Card>
     </Container>
