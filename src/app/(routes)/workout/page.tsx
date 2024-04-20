@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Typography,
   Paper,
@@ -28,15 +28,16 @@ function WorkoutComponent() {
   const [calories, setCalories] = useState(0);
   const [targetRPM, setTargetRPM] = useState(160);
   const [currentRPM, setCurrentRPM] = useState(0);
-  const [active, setActive] = useState(false);
-  const [lastPingTime, setLastPingTime] = useState(1);
+  const active = useRef(false);
+  const lastPingTime = useRef(1);
+  const [rpmHistory, setRpmHistory] = useState([]);
 
   const isRpmsMatch = () =>
     currentRPM >= targetRPM - 25 && currentRPM <= targetRPM + 25;
 
   useEffect(() => {
     let timer;
-    if (active) {
+    if (active.current) {
       timer = setInterval(() => {
         setElapsedTime((prev) => prev + 0.1);
         setCalories((prev) => prev + (0.1 * currentRPM) / 600); // Example calorie calculation
@@ -46,7 +47,7 @@ function WorkoutComponent() {
       }, 100);
     }
     return () => clearInterval(timer);
-  }, [currentRPM, active, targetRPM]);
+  }, [currentRPM, active.current, targetRPM]);
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -55,11 +56,16 @@ function WorkoutComponent() {
   };
 
   const handleStartPauseToggle = () => {
-    setActive(!active);
+    active.current = !active.current;
+    setRpmHistory((prevHistory) => {
+      const newHistory = [].slice(-5);
+      setCurrentRPM(0);
+      return newHistory;
+    });
   };
 
   const handleStop = () => {
-    setActive(false);
+    active.current = false;
     setElapsedTime(0);
     setMatchTime(0);
     setCalories(0);
@@ -72,37 +78,25 @@ function WorkoutComponent() {
   };
 
   const handleDataReceived = (data) => {
-    // Check if the data is an integer
     if (typeof data === "number" && Number.isInteger(data)) {
-      console.log("Received data from Bluetooth device:", data);
+      const currentTime = Date.now();
+      const timeDiff = (currentTime - lastPingTime.current) / 1000; // in seconds
+      const rpm = 60 / timeDiff;
 
-      // Capture the current time in milliseconds
-      const currentTime: number = Date.now();
+      lastPingTime.current = currentTime; // Update last ping time
 
-      console.log(currentTime, lastPingTime);
-      console.log(currentRPM);
-
-      if (lastPingTime) {
-        // Calculate the time difference in seconds
-        const timeDiff = (currentTime - lastPingTime) / 1000;
-
-        console.log(timeDiff);
-
-        // Calculate RPM: 60 seconds divided by the time difference per revolution
-        const currentRPM = 60 / timeDiff;
-        setCurrentRPM(currentRPM);
-        console.log(`Current RPM: ${currentRPM.toFixed(2)}`);
+      if (active.current) {
+        setRpmHistory((prevHistory) => {
+          const newHistory = [...prevHistory, rpm].slice(-5); // Keep only the last 10 entries
+          console.log(newHistory); // Debugging
+          setCurrentRPM(
+            newHistory.reduce((a, b) => a + b, 0) / newHistory.length
+          ); // Calculate average RPM
+          return newHistory;
+        });
       }
-      console.log("mrs", currentTime);
-      setLastPingTime(currentTime);
-    } else {
-      console.log("Received non-integer data:", data);
     }
   };
-
-  useEffect(() => {
-    console.log(`Last Ping Time updated to: ${lastPingTime}`);
-  }, [lastPingTime]);
 
   return (
     <Paper
@@ -116,24 +110,7 @@ function WorkoutComponent() {
         justifyContent: "center",
       }}
     >
-      <div
-        style={{
-          padding: "20px",
-          backgroundColor: theme.palette.background.default,
-        }}
-      >
-        <h1>Jump Rope Workout Tracker</h1>
-        <p>Elapsed Time: {formatTime(elapsedTime)}</p>
-        <p>Match Time: {formatTime(matchTime)}</p>
-        <p>Calories Burned: {calories.toFixed(2)}</p>
-        <p>Current RPM: {currentRPM.toFixed(0)}</p>
-        <p>Percentage of Match Time: {getMatchPercentage().toFixed(2)}%</p>
-        <p>BLE:{}</p>
-      </div>
       <Scan onDataReceived={handleDataReceived} />
-      <Typography variant="h1" gutterBottom>
-        Jump Rope HERO
-      </Typography>
 
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <Box
@@ -249,7 +226,7 @@ function WorkoutComponent() {
             "&:hover": { background: theme.palette.primary.main },
           }}
         >
-          {active ? (
+          {active.current ? (
             <Pause size={24} color={"white"} />
           ) : (
             <Play size={24} color={"white"} />

@@ -1,4 +1,5 @@
 // Scan.js
+import { Typography } from "@mui/material";
 import React, { useState } from "react";
 
 const Scan = ({ onDataReceived }) => {
@@ -25,7 +26,7 @@ const Scan = ({ onDataReceived }) => {
       characteristic.oncharacteristicvaluechanged = (event) => {
         const value = event.target.value;
         const intValue = value.getUint16(0, true); // Read value as a 16-bit unsigned integer
-        onDataReceived(intValue); // Trigger the callback with the new integer value
+        onDataReceived(intValue);
         updateDeviceData(device.id, intValue);
       };
 
@@ -55,17 +56,17 @@ const Scan = ({ onDataReceived }) => {
   };
 
   return (
-    <div>
-      <button onClick={handleScan}>Scan for Devices</button>
-      {error && <p>{error}</p>}
+    <Typography variant="h1" onClick={handleScan} gutterBottom>
+      Jump Rope HERO
+      {/*{error && <p>{error}</p>}
       <ul>
         {devices.map((device) => (
           <li key={device.id}>
             {device.name} - Data: {device.data}
           </li>
         ))}
-      </ul>
-    </div>
+      </ul>*/}
+    </Typography>
   );
 };
 
