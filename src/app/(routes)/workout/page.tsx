@@ -241,7 +241,6 @@ function WorkoutComponent() {
             <Box
               width={"8rem"}
               sx={{
-                backgroundColor: theme.palette.grey[100],
                 borderRadius: "7px",
                 display: "flex",
                 justifyContent: "center",
@@ -265,7 +264,6 @@ function WorkoutComponent() {
             <Box
               width={"8rem"}
               sx={{
-                backgroundColor: theme.palette.grey[100],
                 borderRadius: "7px",
                 display: "flex",
                 justifyContent: "center",
