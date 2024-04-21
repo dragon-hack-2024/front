@@ -40,7 +40,7 @@ interface Data {
   user_id: number;
 }
 
-const bpmData = [115, 150, 100];
+const bpmData = [115, 150, 96];
 
 function WorkoutComponent() {
   const theme = useTheme();
