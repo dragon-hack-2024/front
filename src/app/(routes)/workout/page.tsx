@@ -64,9 +64,9 @@ function WorkoutComponent() {
     currentRPM >= targetRPM.current - 25 &&
     currentRPM <= targetRPM.current + 25;
 
+  const counterRef = useRef(0);
   useEffect(() => {
     let timer;
-    let counter = 0;
 
     if (active.current) {
       timer = setInterval(() => {
@@ -75,12 +75,12 @@ function WorkoutComponent() {
           setMatchTime((prev) => prev + 0.1);
         }
 
-        counter += 1;
-        if (counter >= 100) {
+        counterRef.current += 1;
+        if (counterRef.current >= 100) {
           // When counter hits 100 (which is 10 seconds), do something
           console.log("10 seconds have passed");
           // Reset the counter
-          counter = 0;
+          counterRef.current = 0;
 
           // Example: You can do more here, like updating state or triggering another function
           targetRPM.current = bpmData[bpmIndex.current];
@@ -233,10 +233,9 @@ function WorkoutComponent() {
           sx={{
             mt: 0.5,
             paddingY: 2,
-            paddingX: 4
+            paddingX: 4,
           }}
         >
-
           <Box display="flex" justifyContent="space-around">
             <Box
               width={"8rem"}
@@ -341,7 +340,15 @@ function WorkoutComponent() {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "space-around", justifyItems: "center", mt: "2rem", mb: "2rem"}}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              justifyItems: "center",
+              mt: "2rem",
+              mb: "2rem",
+            }}
+          >
             <IconButton
               onClick={handleStartPauseToggle}
               sx={{
@@ -356,14 +363,11 @@ function WorkoutComponent() {
                 <Play size={24} color={"white"} />
               )}
             </IconButton>
-            
-            <Box sx={{display: "flex", alignItems: "center"}}>
-            <Typography
-              variant="h3"
-              sx={{ textAlign: "center" }}
-            >
-              {formatTime(elapsedTime.toFixed(0))}
-            </Typography>
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h3" sx={{ textAlign: "center" }}>
+                {formatTime(elapsedTime.toFixed(0))}
+              </Typography>
             </Box>
 
             <IconButton
