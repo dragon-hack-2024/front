@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { RotateCwIcon } from "lucide-react";
 import { Box, Typography, LinearProgress, duration, Skeleton } from "@mui/material";
 
 const averageBpm = (steps) => {
@@ -73,8 +74,12 @@ function Challenges() {
                 <Typography variant="caption">Duration: {Math.floor(challenge.duration / 60) > 0 ? Math.floor(challenge.duration / 60) + "min" : ""} {challenge.duration % 60}s</Typography>
 
                 <Box sx={{display: "flex", justifyContent: "end"}}>
-                    <Box sx={{ border: borderDifficulty(averageBpm(challenge.steps)), backgroundColor: backgroundDifficulty(averageBpm(challenge.steps)), borderRadius: "20px", paddingX: "0.2rem", paddingY: "0.2rem", width: "2.5rem", textAlign: "center"}}>
-                        <Typography variant="caption">{ averageBpm(challenge.steps).toFixed() }</Typography>
+
+                    <Box sx={{ display: "flex", justifyItems: "center" }}>
+                      <RotateCwIcon size={16} style={{marginRight: "0.3rem"}}/>
+                      <Typography variant="text" sx={{ display: "block" }}
+                        >{ averageBpm(challenge.steps).toFixed() } RPM
+                      </Typography>
                     </Box>
                 </Box>
             </Box>
