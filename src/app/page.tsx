@@ -12,6 +12,7 @@ import Scan from "@/components/Scan";
 import { BellIcon, CircleUserRoundIcon, RulerIcon, WeightIcon } from "lucide-react";
 import ProgressGraph from "@/components/ProgressGraph";
 import Calendar from "@/components/Calendar";
+import History from "@/components/History";
 import Challenges from "@/components/Challenges";
 import React, { useEffect, useState } from "react";
 
@@ -52,7 +53,6 @@ export default function Home() {
         }
 
         const data = await response.json() as User;
-        console.log(data);
         setUser(data);
       } catch (error) {
         console.error("Error fetching challenges:", error);
@@ -85,7 +85,7 @@ export default function Home() {
           }
         </Box>
         <IconButton aria-label="notifications">
-          <BellIcon />
+          <BellIcon size={22}/>
         </IconButton>
       </Box>
       
@@ -115,6 +115,13 @@ export default function Home() {
           Weekly Skips
         </Typography>
         <ProgressGraph />
+      </Box>
+
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" sx={{ textAlign: "center"}}>
+          History
+        </Typography>
+        <History />
       </Box>
 
       <Box sx={{ mt: 4 }}>

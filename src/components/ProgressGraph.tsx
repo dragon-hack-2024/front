@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Skeleton } from "@mui/material";
+import { Box, Typography, Skeleton, useTheme } from "@mui/material";
 
 const getDayLabel = (dateStr: string): string =>  {
   const date = new Date(dateStr);
@@ -10,6 +10,7 @@ const getDayLabel = (dateStr: string): string =>  {
 }
 
 function ProgressGraph() {
+  const theme = useTheme();
 
   const [weeklyStats, setWeeklyStats] = useState([]);
   const [maxProgress, setMaxProgress] = useState(100);
@@ -64,7 +65,7 @@ function ProgressGraph() {
             flexDirection: "column",
             alignItems: "center",
             width: 1,
-            backgroundColor: "#e7e5e4",
+            backgroundColor: theme.palette.grey[300],
             position: "relative",
             height: "100%",
             borderRadius: "7px",
@@ -74,7 +75,7 @@ function ProgressGraph() {
             sx={{
               height: `${weeklyStat.progress / maxProgress * 100 * 0.7}%`,
               width: "100%",
-              backgroundColor: weeklyStat.progress > 0 ? "#f87171" : "#a8a29e",
+              backgroundColor: weeklyStat.progress > 0 ? theme.palette.primary.main : theme.palette.grey[300],
               borderRadius: "7px",
               transition: "height 0.3s ease",
               position: "absolute",

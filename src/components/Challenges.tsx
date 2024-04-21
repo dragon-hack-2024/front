@@ -8,21 +8,21 @@ const averageBpm = (steps) => {
 
 const backgroundDifficulty = (bpm: number) => {
   if (bpm < 90) {
-    return "#dcfce7";
+    return "#bbf7d0";
   } else if (bpm < 120) {
-    return "#fef9c3";
+    return "#fde68a";
   } else {
-    return "#fee2e2";
+    return "#fecaca";
   }
 }
 
 const borderDifficulty = (bpm: number) => {
     if (bpm < 90) {
-        return "2px #84cc16 solid";
+        return "2px #86efac solid";
     } else if (bpm < 120) {
-        return "2px #eab308 solid";
+        return "2px #fcd34d solid";
     } else {
-        return "2px #ef4444 solid";
+        return "2px #fca5a5 solid";
     }
 }
 
