@@ -40,7 +40,7 @@ interface Data {
   user_id: number;
 }
 
-const bpmData = [100, 150, 200];
+const bpmData = [115, 150, 100];
 
 function WorkoutComponent() {
   const theme = useTheme();
@@ -52,6 +52,7 @@ function WorkoutComponent() {
   const targetRPM = useRef(bpmData[0]);
   const [currentRPM, setCurrentRPM] = useState(0);
   const active = useRef(false);
+  const audioRef = useRef(null);
   const lastPingTime = useRef(1);
   const jumpCount = useRef(0);
   const timeoutRef = useRef(null);
@@ -110,10 +111,20 @@ function WorkoutComponent() {
       setCurrentRPM(0);
       return newHistory;
     });
+
+    if (active.current) {
+      audioRef.current.play();
+    } else {
+      audioRef.current.pause();
+    }
   };
 
   const handleStop = () => {
     active.current = false;
+
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0; // Optionally reset audio to start
+
     finishWorkout();
     setElapsedTime(0);
     setMatchTime(0);
@@ -227,6 +238,7 @@ function WorkoutComponent() {
         onClose={handleCloseDialog}
         data={workoutData}
       />
+      <audio ref={audioRef} src="/rope.mp3" preload="auto" loop />
       <Container>
         <Scan onDataReceived={handleDataReceived} />
         <Box
