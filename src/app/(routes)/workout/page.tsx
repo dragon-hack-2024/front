@@ -40,6 +40,7 @@ function WorkoutComponent() {
   const active = useRef(false);
   const lastPingTime = useRef(1);
   const jumpCount = useRef(0);
+  const timeoutRef = useRef(null);
   const [rpmHistory, setRpmHistory] = useState([]);
   const [user, setUser] = useState<User>({} as User);
 
@@ -77,6 +78,7 @@ function WorkoutComponent() {
 
   const handleStop = () => {
     active.current = false;
+    finishWorkout();
     setElapsedTime(0);
     setMatchTime(0);
     setCalories(0);
@@ -91,26 +93,29 @@ function WorkoutComponent() {
   const handleDataReceived = (data) => {
     if (typeof data === "number" && Number.isInteger(data)) {
       const currentTime = Date.now();
-      const timeDiff = (currentTime - lastPingTime.current) / 1000; // in seconds
+      const timeDiff = (currentTime - lastPingTime.current) / 1000;
       const rpm = 60 / timeDiff;
 
       lastPingTime.current = currentTime; // Update last ping time
 
       if (active.current) {
-        jumpCount.current += 1;
         setRpmHistory((prevHistory) => {
-          const newHistory = [...prevHistory, rpm].slice(-5); // Keep only the last 10 entries
-          console.log(newHistory); // Debugging
+          const newHistory = [...prevHistory, rpm].slice(-5); // Keep only the last 5 entries
           setCurrentRPM(
             newHistory.reduce((a, b) => a + b, 0) / newHistory.length
           ); // Calculate average RPM
           return newHistory;
         });
+
+        // Reset the timeout each time data is received
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
+          setCurrentRPM(0); // Reset RPM to zero after 2 seconds of inactivity
+          setRpmHistory([]); // Optionally clear history
+        }, 2000); // 2 seconds timeout
       }
     }
   };
-
-  const fetchUser = async () => {};
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -130,6 +135,8 @@ function WorkoutComponent() {
     };
 
     fetchUser();
+
+    return () => clearTimeout(timeoutRef.current);
   }, []);
 
   const finishWorkout = async () => {
@@ -142,8 +149,10 @@ function WorkoutComponent() {
       user_id: 1,
     };
 
+    console.log(data);
+
     // Send data to server
-    const response = await fetch("http://localhost:8080/v1/stats", {
+    /*const response = await fetch("http://localhost:8080/v1/stats", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -155,7 +164,7 @@ function WorkoutComponent() {
       console.log("Data sent successfully");
     } else {
       console.error("Failed to send data to server");
-    }
+    }*/
   };
 
   return (
