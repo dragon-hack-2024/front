@@ -40,13 +40,15 @@ interface Data {
   user_id: number;
 }
 
+const bpmData = [100, 150, 200];
+
 function WorkoutComponent() {
   const theme = useTheme();
   const maxRPM = 300;
   const [elapsedTime, setElapsedTime] = useState(0);
   const [matchTime, setMatchTime] = useState(0);
   const [calories, setCalories] = useState(0);
-  const [targetRPM, setTargetRPM] = useState(150);
+  const [targetRPM, setTargetRPM] = useState(bpmData[0]);
   const [currentRPM, setCurrentRPM] = useState(0);
   const active = useRef(false);
   const lastPingTime = useRef(1);
@@ -55,16 +57,35 @@ function WorkoutComponent() {
   const [rpmHistory, setRpmHistory] = useState([]);
   const [user, setUser] = useState<User>({} as User);
 
+  const bpmIndex = useRef(0);
+
   const isRpmsMatch = () =>
     currentRPM >= targetRPM - 25 && currentRPM <= targetRPM + 25;
 
   useEffect(() => {
     let timer;
+    let counter = 0;
+
     if (active.current) {
       timer = setInterval(() => {
         setElapsedTime((prev) => prev + 0.1);
         if (isRpmsMatch()) {
           setMatchTime((prev) => prev + 0.1);
+        }
+
+        counter += 1;
+        if (counter === 10) {
+          // When counter hits 100 (which is 10 seconds), do something
+          console.log("1 seconds have passed");
+          // Reset the counter
+          counter = 0;
+
+          // Example: You can do more here, like updating state or triggering another function
+        }
+
+        if (false) {
+          setTargetRPM(bpmData[bpmIndex.current]);
+          bpmIndex.current = (bpmIndex.current + 1) % bpmData.length;
         }
       }, 100);
     }
@@ -104,16 +125,17 @@ function WorkoutComponent() {
     if (typeof data === "number" && Number.isInteger(data)) {
       const currentTime = Date.now();
       const timeDiff = (currentTime - lastPingTime.current) / 1000;
-      const rpm = 60 / timeDiff;
+      const rpm = Math.min(300, 60 / timeDiff);
 
       lastPingTime.current = currentTime; // Update last ping time
 
       if (active.current) {
+        jumpCount.current += 1;
         const weight = user.weight || 70; // Default weight is 70 kg
         setCalories((prev) => prev + (12 * weight * 3.5) / 200 / 120);
         setRpmHistory((prevHistory) => {
           const newHistory = [...prevHistory, rpm].slice(-5); // Keep only the last 5 entries
-          print(newHistory);
+          console.log(newHistory);
           setCurrentRPM(
             newHistory.reduce((a, b) => a + b, 0) / newHistory.length
           ); // Calculate average RPM
@@ -160,9 +182,10 @@ function WorkoutComponent() {
   };
 
   const finishWorkout = async () => {
+    console.log(jumpCount.current);
     const data: Data = {
       calories_burned: Math.floor(calories),
-      rpm: jumpCount.current / (elapsedTime / 60),
+      rpm: jumpCount.current / elapsedTime,
       duration: Math.floor(elapsedTime),
       score: getMatchPercentage(),
       challenge_id: 1,

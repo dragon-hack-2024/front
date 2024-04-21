@@ -68,7 +68,7 @@ function SaveDialog({
 
             <Box sx={{ display: "flex", justifyItems: "center" }}>
               <TargetIcon size={16} style={{ marginRight: "0.2rem" }} />
-              <Typography>{data?.score}%</Typography>
+              <Typography>{data?.score?.toFixed(2)}%</Typography>
             </Box>
           </Box>
 
