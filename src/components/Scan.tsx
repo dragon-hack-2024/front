@@ -70,7 +70,7 @@ const Scan = ({ onDataReceived }) => {
     <Box>
       <Typography variant="subtitle1">workout</Typography> 
       <Typography onClick={handleScan} variant="h3" sx={{ display: "inline", mr: 2 }}>
-        Jump Rope Hero
+        Beat Bounce
       </Typography>
     </Box>
     <IconButton href="/" aria-label="notifications">
