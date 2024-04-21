@@ -65,7 +65,6 @@ function WorkoutComponent() {
     currentRPM >= targetRPM.current - 25 &&
     currentRPM <= targetRPM.current + 25;
 
-  const counterRef = useRef(0);
   useEffect(() => {
     let timer;
 
@@ -75,13 +74,19 @@ function WorkoutComponent() {
         if (isRpmsMatch()) {
           setMatchTime((prev) => prev + 0.1);
         }
+      }, 100);
+    }
+    return () => clearInterval(timer);
+  }, [active.current]);
 
-        counterRef.current += 1;
-        if (counterRef.current >= 100) {
+  useEffect(() => {
+    let timer;
+
+    if (active.current) {
+      timer = setInterval(() => {
+        if (active.current) {
           // When counter hits 100 (which is 10 seconds), do something
           console.log("10 seconds have passed");
-          // Reset the counter
-          counterRef.current = 0;
 
           // Example: You can do more here, like updating state or triggering another function
           targetRPM.current = bpmData[bpmIndex.current];
@@ -93,10 +98,10 @@ function WorkoutComponent() {
             bpmData[bpmIndex.current]
           );
         }
-      }, 100);
+      }, 10000);
     }
     return () => clearInterval(timer);
-  }, [currentRPM, active.current]);
+  }, [active.current]);
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
