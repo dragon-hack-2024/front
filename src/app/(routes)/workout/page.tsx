@@ -324,7 +324,7 @@ function WorkoutComponent() {
             <Box
               sx={{
                 position: "absolute",
-                bottom: (targetRPM / maxRPM) * 55 - 5 + "vh",
+                bottom: (targetRPM.current / maxRPM) * 55 - 5 + "vh",
                 width: "70%",
                 height: "10vh",
                 borderRadius: "7px",
