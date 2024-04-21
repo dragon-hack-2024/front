@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { FlameIcon, RotateCwIcon, CalendarIcon, TargetIcon } from "lucide-react";
 import { Box, Typography, LinearProgress, duration, Skeleton, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 
 const toDate = (dateStr: string) => {
@@ -16,7 +17,7 @@ function History() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch("http://localhost:8080/v1/stats?limit=5&offset=0&user_id=1");
+        const response = await fetch("http://localhost:8080/v1/stats?limit=4&offset=0&user_id=1");
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -48,6 +49,7 @@ function History() {
             <Box key={index} sx={{ 
             display: "flex",
             justifyContent: "space-around",
+            flexDirection: "column",
             mt: 2, 
             borderRadius: "7px",
             paddingX: "1rem", 
@@ -56,11 +58,29 @@ function History() {
             '--tw-shadow-colored': '0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color)', 
             boxShadow: 'var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)',
             }}>
-                <Typography variant="text">{ toDate(item.created_at) }</Typography>
-                <Typography variant="text">{ item.score.toFixed() }%</Typography>
-                <Typography variant="text">{ item.calories_burned.toFixed() } kcal</Typography>
-                <Typography variant="text">{ item.rpm.toFixed() } RPM</Typography>
+              <Box sx={{display: "flex", justifyContent: "space-around"}}>
+                <Box sx={{ display: "flex", justifyItems: "center" }}>
+                  <CalendarIcon size={16} style={{marginRight: "0.2rem"}}/>
+                  <Typography variant="text">{ toDate(item.created_at) }</Typography>
+                </Box>
+                
+                <Box sx={{ display: "flex", justifyItems: "center" }}>
+                  <TargetIcon size={16} style={{marginRight: "0.2rem"}}/>
+                  <Typography variant="text">{ item.score.toFixed() }%</Typography>
+                </Box>
+              </Box>
 
+              <Box sx={{display: "flex", justifyContent: "space-around", mt: 2}}>
+              <Box sx={{ display: "flex", justifyItems: "center" }}>
+                  <FlameIcon size={16} style={{marginRight: "0.2rem"}} />
+                  <Typography variant="text">{ item.calories_burned.toFixed() } kcal</Typography>
+                </Box>
+
+                <Box sx={{ display: "flex", justifyItems: "center" }}>
+                  <RotateCwIcon size={16} style={{marginRight: "0.2rem"}}/>
+                  <Typography variant="text">{ item.rpm.toFixed() } RPM</Typography>
+                </Box>
+              </Box>
                 
             </Box>
         ))}
