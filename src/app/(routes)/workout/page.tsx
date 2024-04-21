@@ -231,23 +231,15 @@ function WorkoutComponent() {
         <Scan onDataReceived={handleDataReceived} />
         <Box
           sx={{
-            mt: 2,
+            mt: 0.5,
             paddingY: 2,
-            width: "100vw",
-            height: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
+            paddingX: 4
           }}
         >
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
+
+          <Box display="flex" justifyContent="space-around">
             <Box
-              width={"35vw"}
+              width={"8rem"}
               sx={{
                 backgroundColor: theme.palette.grey[100],
                 borderRadius: "7px",
@@ -257,9 +249,9 @@ function WorkoutComponent() {
                 mr: 2,
               }}
             >
-              <RotateCwIcon size={30} />
+              <RotateCwIcon size={24} />
               <Typography
-                variant="h3"
+                variant="h4"
                 ml="2"
                 sx={{
                   my: 2,
@@ -271,7 +263,7 @@ function WorkoutComponent() {
             </Box>
 
             <Box
-              width={"35vw"}
+              width={"8rem"}
               sx={{
                 backgroundColor: theme.palette.grey[100],
                 borderRadius: "7px",
@@ -281,9 +273,9 @@ function WorkoutComponent() {
                 ml: 2,
               }}
             >
-              <FlameIcon size={30} />
+              <FlameIcon size={24} />
               <Typography
-                variant="h3"
+                variant="h4"
                 sx={{
                   my: 2,
                   ml: 1,
@@ -296,11 +288,11 @@ function WorkoutComponent() {
           <Box
             sx={{
               height: "55vh",
-              width: "100%",
               display: "flex",
               justifyContent: "center",
               position: "relative",
               m: 2,
+              mt: 4,
               overflow: "hidden",
             }}
           >
@@ -308,7 +300,7 @@ function WorkoutComponent() {
               sx={{
                 position: "absolute",
                 top: 0,
-                width: "50%",
+                width: "70%",
                 height: "55vh",
                 borderRadius: "7px",
                 backgroundColor: theme.palette.grey[100],
@@ -318,7 +310,7 @@ function WorkoutComponent() {
               sx={{
                 position: "absolute",
                 bottom: 0,
-                width: "50%",
+                width: "70%",
                 height: (currentRPM / maxRPM) * 55 + "vh",
                 borderRadius: "7px",
                 backgroundColor: isRpmsMatch()
@@ -332,8 +324,8 @@ function WorkoutComponent() {
             <Box
               sx={{
                 position: "absolute",
-                bottom: (targetRPM.current / maxRPM) * 55 - 5 + "vh",
-                width: "50%",
+                bottom: (targetRPM / maxRPM) * 55 - 5 + "vh",
+                width: "70%",
                 height: "10vh",
                 borderRadius: "7px",
                 opacity: 0.5,
@@ -351,7 +343,7 @@ function WorkoutComponent() {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex" }}>
+          <Box sx={{ display: "flex", justifyContent: "space-around", justifyItems: "center", mt: "2rem", mb: "2rem"}}>
             <IconButton
               onClick={handleStartPauseToggle}
               sx={{
@@ -366,13 +358,15 @@ function WorkoutComponent() {
                 <Play size={24} color={"white"} />
               )}
             </IconButton>
-
+            
+            <Box sx={{display: "flex", alignItems: "center"}}>
             <Typography
-              variant="h2"
-              sx={{ mb: 1, width: "20vw", textAlign: "center" }}
+              variant="h3"
+              sx={{ textAlign: "center" }}
             >
               {formatTime(elapsedTime.toFixed(0))}
             </Typography>
+            </Box>
 
             <IconButton
               onClick={handleStop}
