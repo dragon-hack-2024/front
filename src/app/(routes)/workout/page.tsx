@@ -34,7 +34,7 @@ interface User {
 interface Data {
   duration: number;
   score: number;
-  calories_burned: string;
+  calories_burned: number;
   rpm: number;
   challenge_id: number;
   user_id: number;
@@ -113,6 +113,7 @@ function WorkoutComponent() {
         setCalories((prev) => prev + (12 * weight * 3.5) / 200 / 120);
         setRpmHistory((prevHistory) => {
           const newHistory = [...prevHistory, rpm].slice(-5); // Keep only the last 5 entries
+          print(newHistory);
           setCurrentRPM(
             newHistory.reduce((a, b) => a + b, 0) / newHistory.length
           ); // Calculate average RPM
@@ -160,9 +161,9 @@ function WorkoutComponent() {
 
   const finishWorkout = async () => {
     const data: Data = {
-      calories_burned: calories.toFixed(0),
+      calories_burned: Math.floor(calories),
       rpm: jumpCount.current / (elapsedTime / 60),
-      duration: elapsedTime,
+      duration: Math.floor(elapsedTime),
       score: getMatchPercentage(),
       challenge_id: 1,
       user_id: 1,

@@ -18,7 +18,7 @@ import {
 interface Data {
   duration: number;
   score: number;
-  calories_burned: string;
+  calories_burned: number;
   rpm: number;
   challenge_id: number;
   user_id: number;
@@ -36,8 +36,7 @@ function SaveDialog({
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
-    const secondsStr = seconds.toFixed(0);
-    return `${minutes}:${seconds < 10 ? "0" : ""}${secondsStr}`;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
   return (
