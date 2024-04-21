@@ -24,7 +24,6 @@ function History() {
         }
 
         const data = await response.json();
-        console.log(data);
         setHistory(data);
       } catch (error) {
         console.error("Error fetching challenges:", error);

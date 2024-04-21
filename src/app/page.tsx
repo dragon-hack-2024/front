@@ -53,7 +53,6 @@ export default function Home() {
         }
 
         const data = await response.json() as User;
-        console.log(data);
         setUser(data);
       } catch (error) {
         console.error("Error fetching challenges:", error);
@@ -86,7 +85,7 @@ export default function Home() {
           }
         </Box>
         <IconButton aria-label="notifications">
-          <BellIcon />
+          <BellIcon size={22}/>
         </IconButton>
       </Box>
       
