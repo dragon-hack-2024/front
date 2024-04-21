@@ -1,6 +1,9 @@
 // Scan.js
-import { Typography } from "@mui/material";
+import { Typography, Box, IconButton } from "@mui/material";
 import React, { useState } from "react";
+import {
+  HomeIcon
+} from "lucide-react";
 
 const Scan = ({ onDataReceived }) => {
   const [devices, setDevices] = useState([]);
@@ -56,17 +59,24 @@ const Scan = ({ onDataReceived }) => {
   };
 
   return (
-    <Typography variant="h1" onClick={handleScan} gutterBottom>
-      Jump Rope HERO
-      {/*{error && <p>{error}</p>}
-      <ul>
-        {devices.map((device) => (
-          <li key={device.id}>
-            {device.name} - Data: {device.data}
-          </li>
-        ))}
-      </ul>*/}
-    </Typography>
+    <Box
+    sx={{
+      mt: 4,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    }}
+  >
+    <Box>
+      <Typography variant="subtitle1">workout</Typography> 
+      <Typography onClick={handleScan} variant="h3" sx={{ display: "inline", mr: 2 }}>
+        Jump Rope Hero
+      </Typography>
+    </Box>
+    <IconButton href="/" aria-label="notifications">
+      <HomeIcon size={22}/>
+    </IconButton>
+  </Box>
   );
 };
 
