@@ -7,7 +7,7 @@ import {
   Button,
   IconButton,
   useTheme,
-  Container
+  Container,
 } from "@mui/material";
 import { LinearProgress } from "@mui/material";
 import {
@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import Scan from "@/components/Scan";
 import SaveDialog from "@/components/saveDialog";
-import { log } from "console";
 
 interface User {
   id: number;
@@ -49,7 +48,8 @@ function WorkoutComponent() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [matchTime, setMatchTime] = useState(0);
   const [calories, setCalories] = useState(0);
-  const [targetRPM, setTargetRPM] = useState(bpmData[0]);
+  //const [targetRPM, setTargetRPM] = useState(bpmData[0]);
+  const targetRPM = useRef(bpmData[0]);
   const [currentRPM, setCurrentRPM] = useState(0);
   const active = useRef(false);
   const lastPingTime = useRef(1);
@@ -58,10 +58,11 @@ function WorkoutComponent() {
   const [rpmHistory, setRpmHistory] = useState([]);
   const [user, setUser] = useState<User>({} as User);
 
-  const bpmIndex = useRef(0);
+  const bpmIndex = useRef(1);
 
   const isRpmsMatch = () =>
-    currentRPM >= targetRPM - 25 && currentRPM <= targetRPM + 25;
+    currentRPM >= targetRPM.current - 25 &&
+    currentRPM <= targetRPM.current + 25;
 
   useEffect(() => {
     let timer;
@@ -75,23 +76,26 @@ function WorkoutComponent() {
         }
 
         counter += 1;
-        if (counter === 10) {
+        if (counter >= 100) {
           // When counter hits 100 (which is 10 seconds), do something
-          console.log("1 seconds have passed");
+          console.log("10 seconds have passed");
           // Reset the counter
           counter = 0;
 
           // Example: You can do more here, like updating state or triggering another function
-        }
-
-        if (false) {
-          setTargetRPM(bpmData[bpmIndex.current]);
+          targetRPM.current = bpmData[bpmIndex.current];
           bpmIndex.current = (bpmIndex.current + 1) % bpmData.length;
+
+          console.log(
+            targetRPM.current,
+            bpmIndex.current,
+            bpmData[bpmIndex.current]
+          );
         }
       }, 100);
     }
     return () => clearInterval(timer);
-  }, [currentRPM, active.current, targetRPM]);
+  }, [currentRPM, active.current]);
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -237,8 +241,11 @@ function WorkoutComponent() {
             justifyContent: "center",
           }}
         >
-
-          <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <Box
               width={"35vw"}
               sx={{
@@ -325,7 +332,7 @@ function WorkoutComponent() {
             <Box
               sx={{
                 position: "absolute",
-                bottom: (targetRPM / maxRPM) * 55 - 5 + "vh",
+                bottom: (targetRPM.current / maxRPM) * 55 - 5 + "vh",
                 width: "50%",
                 height: "10vh",
                 borderRadius: "7px",
@@ -335,10 +342,11 @@ function WorkoutComponent() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                transition: "bottom 0.5s ease",
               }}
             >
               <Typography variant="h3" sx={{ color: "black" }}>
-                {targetRPM}
+                {targetRPM.current}
               </Typography>
             </Box>
           </Box>
