@@ -104,7 +104,7 @@ export default function ChallengePage({ params }: {params: {id: number}}) {
           </Typography>
           }
         </Box>
-        <IconButton aria-label="notifications">
+        <IconButton href="/" aria-label="notifications">
           <HomeIcon size={22}/>
         </IconButton>
       </Box>
@@ -138,9 +138,9 @@ export default function ChallengePage({ params }: {params: {id: number}}) {
                   {index + 1}.
                 </TableCell>
                 <TableCell align="right">{stat.name}</TableCell>
-                <TableCell align="right">{stat.score}</TableCell>
-                <TableCell align="right">{stat.rpm}</TableCell>
-                <TableCell align="right">{stat.calories_burned}</TableCell>
+                <TableCell align="right">{stat.score.toFixed()}%</TableCell>
+                <TableCell align="right">{stat.rpm.toFixed()}</TableCell>
+                <TableCell align="right">{stat.calories_burned.toFixed()}</TableCell>
               </TableRow>
             ))}
           </TableBody>

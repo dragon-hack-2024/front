@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { RotateCwIcon } from "lucide-react";
-import { Box, Typography, LinearProgress, duration, Skeleton } from "@mui/material";
+import { Box, Typography, LinearProgress, duration, Link, Skeleton } from "@mui/material";
 
 const averageBpm = (steps) => {
   return steps.reduce((acc, step) => acc + step.bpm, 0) / steps.length;
@@ -63,7 +63,9 @@ function Challenges() {
   return (
     <Box>
         {challenges.map((challenge, index) => (
-            <Box key={index} sx={{ mt: 2, 
+          <Link key={index} href={`/challenge/${challenge.id}`}
+          sx={{color: 'inherit', textDecoration: 'none'}}>
+            <Box  sx={{ mt: 2, 
             borderRadius: "7px", 
             paddingX: "1rem", 
             paddingY: "0.75rem", 
@@ -83,6 +85,7 @@ function Challenges() {
                     </Box>
                 </Box>
             </Box>
+          </Link>
         ))}
     </Box>
   );
